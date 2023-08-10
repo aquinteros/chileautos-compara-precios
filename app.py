@@ -11,17 +11,18 @@ from streamlit_extras.mention import mention
 def get_html(url):
 	"""Get the html of a url"""
 	headers = {
-		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:97.0) Gecko/20100101 Firefox/97.0",
+		"User-Agent": "Edge/12.10240",
 		"method": "GET",
 		"mode": "cors",
 	}
 
 	r = requests.get(url, headers=headers)
-	
+
 	if r.status_code != 200:
 		print("Error en la petición")
 		print(r.reason)
 		print(r.text)
+
 	return r.text
 
 
@@ -47,12 +48,22 @@ buy_me_a_coffee(username="aquinteros", floating=False, width=221)
 
 st.sidebar.title("Acerca de")
 
-st.sidebar.write("Esta aplicación web fue creada con el objetivo de comparar precios de autos en ChileAutos.cl.")
-st.sidebar.write("El funcionamiento es simple, solo debes ingresar los filtros que deseas aplicar y presionar el botón 'Buscar'.")
-st.sidebar.write("Los filtros están en formato texto, para evitar errores, se recomienda copiar y pegar los valores desde la página de ChileAutos.cl")
-st.sidebar.write("Al precionar el botón 'Buscar', se realizará una búsqueda en ChileAutos.cl de las primeras 14 páginas y se generará un gráfico de dispersión con los resultados.")
+st.sidebar.write(
+	"Esta aplicación web fue creada con el objetivo de comparar precios de autos en ChileAutos.cl."
+)
+st.sidebar.write(
+	"El funcionamiento es simple, solo debes ingresar los filtros que deseas aplicar y presionar el botón 'Buscar'."
+)
+st.sidebar.write(
+	"Los filtros están en formato texto, para evitar errores, se recomienda copiar y pegar los valores desde la página de ChileAutos.cl"
+)
+st.sidebar.write(
+	"Al precionar el botón 'Buscar', se realizará una búsqueda en ChileAutos.cl de las primeras 14 páginas y se generará un gráfico de dispersión con los resultados."
+)
 st.sidebar.write("Puedes descargarlos para poder realizar un análisis más detallado.")
-st.sidebar.write("('Esta aplicación web fue creada para fines educativos. No se recomienda usarla para tomar decisiones financieras.')")
+st.sidebar.write(
+	"('Esta aplicación web fue creada para fines educativos. No se recomienda usarla para tomar decisiones financieras.')"
+)
 
 
 Keyword = st.text_input("Keyword (modelo)")
@@ -61,7 +72,19 @@ AnoInicio = st.text_input("Año Inicio")
 
 AnoFin = st.text_input("Año Fin")
 
-Combustible = st.selectbox("Combustible", ["Bencina", "Diesel", "Diesel (petróleo)", "Eléctrico", "Gas", "Híbrido", "Otros", "TODOS"])
+Combustible = st.selectbox(
+	"Combustible",
+	[
+		"Bencina",
+		"Diesel",
+		"Diesel (petróleo)",
+		"Eléctrico",
+		"Gas",
+		"Híbrido",
+		"Otros",
+		"TODOS",
+	],
+)
 
 Transmision = st.selectbox("Transmisión", ["Automática", "Manual", "AMBAS"])
 
@@ -93,13 +116,12 @@ with st.sidebar:
 	)
 
 if st.button("Buscar"):
-
 	progress_bar = st.progress(0)
 
 	result = pd.DataFrame(
 		columns=["Link", "Modelo", "Precio", "KM", "Combustible", "Transmisión", "AT4"]
 	)
-	
+
 	if Combustible == "TODOS" and Transmision == "AMBAS":
 		url = f"https://www.chileautos.cl/vehiculos/?q=(And.Servicio.chileautos._.CarAll.keyword({Keyword})._.Ano.range({AnoInicio}..{AnoFin}).)&offset="
 		color = "Combustible"
@@ -116,7 +138,6 @@ if st.button("Buscar"):
 	offsetlist = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156]
 
 	for ofs in offsetlist:
-		
 		url_final = url + str(ofs)
 
 		html = get_html(url_final)
@@ -125,7 +146,9 @@ if st.button("Buscar"):
 		cards = soup.find_all("div", class_="card-body")
 
 		for card in cards:
-			link = "https://www.chileautos.cl" + card.find("a", class_="js-encode-search").get("href")
+			link = "https://www.chileautos.cl" + card.find(
+				"a", class_="js-encode-search"
+			).get("href")
 
 			text_list = []
 			texto = card.find_all("a", class_="js-encode-search")
@@ -176,8 +199,8 @@ if st.button("Buscar"):
 				],
 				ignore_index=True,
 			)
-		
-		progress_bar.progress(ofs/max(offsetlist))
+
+		progress_bar.progress(ofs / max(offsetlist))
 
 	px.defaults.template = "plotly_white"
 
