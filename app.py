@@ -92,7 +92,7 @@ if st.button("Buscar"):
 	progress_bar = st.progress(0)
 
 	result = pd.DataFrame(
-		columns=["Link", "Modelo", "Precio", "KM", "Combustible", "AT3", "AT4"]
+		columns=["Link", "Modelo", "Precio", "KM", "Combustible", "Transmisión", "AT4"]
 	)
 	
 	if Combustible == "TODOS" and Transmision == "AMBAS":
@@ -183,8 +183,6 @@ if st.button("Buscar"):
 		color=color,
 		hover_name="Modelo",
 		title="Comparación de Precios de Autos en ChileAutos.cl",
-		width=800,
-		height=500,
 	)
 
 	st.plotly_chart(fig, use_container_width=True)
