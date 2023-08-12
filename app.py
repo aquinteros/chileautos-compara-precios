@@ -6,12 +6,14 @@ import streamlit as st
 from streamlit_extras.colored_header import colored_header
 from streamlit_extras.buy_me_a_coffee import button as buy_me_a_coffee
 from streamlit_extras.mention import mention
+import random
+import time
 
 
 def get_html(url):
 	"""Get the html of a url"""
 	headers = {
-		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 ",
 		"Accept": "application/json, text/javascript, */*; q=0.01",
 		"method": "GET",
 		"mode": "cors",
@@ -21,6 +23,7 @@ def get_html(url):
 
 	if r.status_code != 200:
 		print("Error en la petición")
+		print(url)
 		print(r.reason)
 		print(r.text)
 
@@ -137,6 +140,7 @@ if st.button("Buscar"):
 		color = None
 
 	offsetlist = [0, 12, 24, 36, 48, 60, 72, 84, 96, 108, 120, 132, 144, 156]
+	offsetlist = [0, 12]
 
 	for ofs in offsetlist:
 		url_final = url + str(ofs)
@@ -202,6 +206,12 @@ if st.button("Buscar"):
 			)
 
 		progress_bar.progress(ofs / max(offsetlist))
+
+		#  sleep for random amount of time between 4 and 7 seconds to avoid getting blocked
+		#  import random
+
+		sleeptime = random.randint(4, 7)
+		time.sleep(sleeptime)
 
 	px.defaults.template = "plotly_white"
 
