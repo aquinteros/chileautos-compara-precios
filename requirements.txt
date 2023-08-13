@@ -4,3 +4,4 @@ plotly
 streamlit
 streamlit_extras
 requests
+webdriver-manager
