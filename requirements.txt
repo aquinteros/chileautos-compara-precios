@@ -5,3 +5,4 @@ streamlit
 streamlit_extras
 requests
 webdriver-manager
+openai

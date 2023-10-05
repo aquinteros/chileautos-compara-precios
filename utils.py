@@ -30,10 +30,6 @@ def get_html(url):
 	browser.execute_script("document.body.style.zoom='100%'")
 	browser.get(url)
 	time.sleep(2)
-	# browser.execute_script(
-	# 	"Object.defineProperty(navigator, 'userAgent', {value: 'Mozilla/5.0 (iPhone; CPU iPhone OS 5_0 like Mac OS X) AppleWebKit/534.46',writable: true,configurable: true});"
-	# )
-	# browser.refresh()
 
 	for i in range(0, 6):
 		browser.execute_script(f"window.scrollTo({i * 2000}, {i * 2000 + 2000})")
