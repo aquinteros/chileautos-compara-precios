@@ -9,15 +9,6 @@ import random
 import time
 from selenium import webdriver
 # from webdriver_manager.chrome import ChromeDriverManager
-import openai
-
-import os
-import dotenv
-
-dotenv.load_dotenv()
-
-
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 def get_html(url):
@@ -137,31 +128,3 @@ def scrape_yapo(Keyword, year_min, year_max, maxpage):
 	df = df.astype(dtypes)
 
 	return df
-
-
-def get_completion(prompt, model="gpt-3.5-turbo-16k-0613", temperature=0, num_retries=3, sleep_time=15):
-	"""Genera un texto en base a un prompt y un modelo de openai, reintenta por una cantidad de veces en caso de error"""
-	messages = [{"role": "user", "content": prompt}]
-
-	response = ""
-
-	if temperature < 0 or temperature > 1:
-		return {"status": "error", "message": "La temperatura debe ser un número entre 0 y 1"}
-
-	for i in range(num_retries):
-		try:
-			response = openai.ChatCompletion.create(
-				model=model,
-				messages=messages,
-				temperature=temperature,
-				max_tokens=12000
-			)
-			break
-		except Exception as e:
-			print(f"Retry {i+1}/{num_retries} failed. Error: {e}")
-			time.sleep(sleep_time)
-
-	if response == '':
-		return {"status": "error", "message": "Máximo de reintentos alcanzado"}
-	else:
-		return {"status": "success", "message": response.choices[0].message["content"]}
